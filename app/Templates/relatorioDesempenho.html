@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="d-flex align-items-center mb-4 gap-2">
+        <div style="width:40px;height:40px;background:#3B82F6;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+            <i class="bi bi-bar-chart-line text-white fs-5"></i>
+        </div>
+        <div>
+            <h4 class="mb-0 fw-semibold">Relatório de Desempenho</h4>
+            <small class="text-muted">Acompanhe o progresso das suas tarefas</small>
+        </div>
+    </div>
+
+    <!-- Cards de resumo -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div style="font-size:2rem;font-weight:700;color:#3B82F6;">{{ total }}</div>
+                <div class="text-muted small mt-1">Total de tarefas</div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div style="font-size:2rem;font-weight:700;color:#22C55E;">{{ total_concluidas }}</div>
+                <div class="text-muted small mt-1">Concluídas</div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div style="font-size:2rem;font-weight:700;color:#F59E0B;">{{ pendentes }}</div>
+                <div class="text-muted small mt-1">Pendentes</div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div style="font-size:2rem;font-weight:700;color:#8B5CF6;">{{ porcentagem }}%</div>
+                <div class="text-muted small mt-1">Taxa de conclusão</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Barra de progresso geral -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-medium">Progresso geral</span>
+                <span class="text-muted small">{{ total_concluidas }} de {{ total }} tarefas</span>
+            </div>
+            <div class="progress" style="height:12px;border-radius:8px;">
+                <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    style="width: {{ porcentagem }}%; border-radius:8px;"
+                    aria-valuenow="{{ porcentagem }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+            </div>
+
+            <!-- Meta do dia -->
+            {% if meta_hoje %}
+            <hr class="my-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-medium">Meta do dia: <strong>{{ meta_quantidade }} tarefa(s)</strong></span>
+                {% if meta_atingida %}
+                    <span class="badge bg-success px-3 py-2">
+                        <i class="bi bi-trophy-fill me-1"></i> Meta atingida!
+                    </span>
+                {% else %}
+                    <span class="badge bg-warning text-dark px-3 py-2">
+                        <i class="bi bi-hourglass-split me-1"></i>
+                        Faltam {{ meta_quantidade|add:"-"|add:total_concluidas }} para atingir a meta
+                    </span>
+                {% endif %}
+            </div>
+            {% else %}
+            <hr class="my-3">
+            <p class="text-muted small mb-0">
+                Você ainda não definiu uma meta para hoje.
+                <a href="{% url 'metaDiaria' %}" class="text-primary">Definir meta</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Lista de tarefas concluídas -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h6 class="fw-semibold mb-3">Tarefas concluídas</h6>
+            {% if concluidas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Título</th>
+                                <th>Categoria</th>
+                                <th>Prioridade</th>
+                                <th>Conclusão</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in concluidas %}
+                            <tr>
+                                <td class="fw-medium">{{ t.titulo }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ t.categoria }}</span></td>
+                                <td>{{ t.prioridade }}</td>
+                                <td class="text-muted small">{{ t.dataConclusao|date:"d/m/Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-clipboard-x fs-2 d-block mb-2"></i>
+                    Nenhuma tarefa concluída ainda.
+                    <br>
+                    <a href="{% url 'tarefa' %}" class="text-primary small">Ver minhas tarefas</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

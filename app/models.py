@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.utils import timezone
 
@@ -110,10 +109,13 @@ class RelatorioDesempenho(models.Model):
         verbose_name = "Relatorio de Desempenho"
 
 class MetaDiaria(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name="Usuário", null=True, blank=True)
     QuantidadeEsperada= models.PositiveIntegerField(default = 0, verbose_name="Quantidade de Tarefas Estipuladas:")
+    data = models.DateField(default=timezone.now, verbose_name="Data da Meta")
     def __str__(self):
-        return self.QuantidadeEsperada
+       return f"Meta de {self.QuantidadeEsperada} tarefas em {self.data}"
     class Meta:
-        verbose_name = "Meta Diaria"    
-        verbose_name_plural = "Metas Diarias" 
-        
+        verbose_name = "Meta Diaria"
+        verbose_name_plural = "Metas Diarias"
+        ordering = ['-data']
+ 

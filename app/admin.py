@@ -23,20 +23,6 @@ class LembreteInline(admin.TabularInline):
 class TarefaAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'status', 'prioridade', 'dataConclusao')
     inlines = [SubTarefaInline, AnotacaoInline, AnexoInline, LembreteInline]
-    exclude = ('usuario',) # Escondemos o campo usuário para preenchê-lo automaticamente
-
-    # Sobrescrevemos o método para salvar a tarefa com o usuário logado automaticamente
-    def save_model(self, request, obj, form, change):
-        if not obj.pk: # Se for uma tarefa nova
-            obj.usuario = request.user
-        super().save_model(request, obj, form, change)
-
-    # Sobrescrevemos a visualização para o usuário ver apenas as próprias tarefas
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs # Superusuários (você) veem tudo
-        return qs.filter(usuario=request.user) # Usuários comuns veem apenas as deles
 
 # Registrando os cadastros básicos (apenas superusuários costumam gerenciar isso)
 admin.site.register(Status)
