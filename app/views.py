@@ -171,11 +171,6 @@ class TarefaCriarView(LoginRequiredMixin, View):
         messages.success(request, f'Tarefa "{titulo}" criada com sucesso!')
         return redirect(reverse('tarefa'))
     
-class MetaDiariaView(View):
-    def get (self, request, *args, **kwargs):
-        meta_diaria = MetaDiaria.objects.all()
-        return render(request, 'metaDiaria.html', {'meta_diaria': meta_diaria})
-    
 class MetaDiariaView(LoginRequiredMixin, View):
     """Mostra e salva a meta de tarefas do dia para o usuário logado."""
  

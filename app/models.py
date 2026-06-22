@@ -69,6 +69,7 @@ class SubTarefa(models.Model):
         verbose_name_plural = "Sub Tarefas "
 
 class Anotacao(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name="Usuário", null=True, blank=True)
     tarefaAnotada = models.ForeignKey(Tarefa, on_delete = models.CASCADE, verbose_name = "Tarefa Mãe")
     texto = models.CharField(max_length = 100, verbose_name="texto da anotação")
     dataCriacao = models.DateTimeField(default=timezone.now)
